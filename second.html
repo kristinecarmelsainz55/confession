@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <style>
+    .h2 {
+      font-family: "Times New Roman", Times, serif;
+      color: rgb(161, 152, 130);
+      text-align: center;
+      font-size: 30px;
+      margin-top: 200px;
+    }
+
+    .buttons {
+      color: #A19882;
+      font-size: 30px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 45px;
+    }
+
+    .buttons button {
+      margin-right: 10px;
+      margin-top: 30px;
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 5px;
+      background-color: #A19882;
+      color: rgb(254, 247, 220);
+      box-shadow: 5px 5px 10px rgb(161, 152, 130);
+    }
+
+    .textBox {
+      position: relative;
+      text-align: center;
+      margin-top: 20px;
+      display: none;
+    }
+
+    .textBox input {
+      width: 200px;
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 5px;
+      border: 1px solid #A19882;
+    }
+
+    .comment {
+      position: absolute;
+      top: -18px;
+      left: 570px;
+      font-size: 12px;
+      color: #A19882;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease-in-out;
+    }
+
+    .textBox input:focus + .comment {
+      opacity: 1;
+    }
+  </style>
+</head>
+
+<body>
+  <h1 class="h2">Are you ready, <span id="userName"></span>?</h1>
+  <div class="buttons">
+    <button onclick="showTextBox()">Yes!!</button>
+    <button onclick="location.href='third.html'">Nahh!!</button>
+  </div>
+  <div class="textBox" id="textBox">
+    <input type="text" placeholder="Your Reason" id="secretInput">
+    <span class="comment">Say something</span>
+    <br>
+    <button onclick="sendReason()">Submit</button>
+  </div>
+
+  <script>
+    const name = sessionStorage.getItem("name");
+    document.getElementById("userName").textContent = name ? name + ", " : "";
+
+    function showTextBox() {
+      document.getElementById("textBox").style.display = "block";
+    }
+
+    function sendReason() {
+      var reason = document.getElementById("secretInput").value;
+      var name = sessionStorage.getItem("name");
+
+      var scriptUrl = "https://script.google.com/macros/s/AKfycbzfLUmJxGjF75K_RyEeRGUndqGFhso-pditYZYvZz6HbBIOlSlVohF2L8dp54kP5nkK/exec";
+      var xhr = new XMLHttpRequest();
+      xhr.open("POST", scriptUrl, true);
+      xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+          if (xhr.status === 200) {
+            alert("Reason sent!");
+          } else {
+            alert("An error occurred while sending the reason. Please try again.");
+          }
+        }
+      };
+
+      xhr.send("name=" + encodeURIComponent(name) + "&reason=" + encodeURIComponent(reason));
+    }
+  </script>
+</body>
+
+</html>
